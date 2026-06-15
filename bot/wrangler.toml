@@ -8,8 +8,8 @@ compatibility_date = "2024-11-01"
 
 # Variables NO secretas (visibles). Ajusta RAW_BASE y GITHUB_REPO tras crear tu repo.
 [vars]
-RAW_BASE = "https://raw.githubusercontent.com/TU_USUARIO/structurai/main"
-GITHUB_REPO = "TU_USUARIO/structurai"
+RAW_BASE = "https://raw.githubusercontent.com/burgos2177-create/structurai/main"
+GITHUB_REPO = "burgos2177-create/structurai"
 MODEL = "gemini-2.0-flash"
 
 # Secretos (cargar con `wrangler secret put`, NO escribir aquí):
