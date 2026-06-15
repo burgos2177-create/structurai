@@ -10,7 +10,7 @@ compatibility_date = "2024-11-01"
 [vars]
 RAW_BASE = "https://raw.githubusercontent.com/burgos2177-create/structurai/main"
 GITHUB_REPO = "burgos2177-create/structurai"
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-flash-latest"
 
 # Secretos (cargar con `wrangler secret put`, NO escribir aquí):
 #   GEMINI_API_KEY          -> de Google AI Studio (aistudio.google.com)
