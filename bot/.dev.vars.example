@@ -1,0 +1,7 @@
+# Copia este archivo a ".dev.vars" para pruebas locales (npx wrangler dev).
+# ".dev.vars" está en .gitignore: NUNCA se sube al repo.
+
+GEMINI_API_KEY=pega-tu-key-de-google-ai-studio
+TELEGRAM_BOT_TOKEN=pega-el-token-de-botfather
+TELEGRAM_WEBHOOK_SECRET=inventa-una-cadena-aleatoria-larga
+GITHUB_TOKEN=pega-tu-token-fino-de-github

@@ -1,0 +1,19 @@
+# wrangler.toml — Configuración del Worker de Cloudflare para StructurAI.
+# Despliegue: dentro de /bot ejecutar  ->  npx wrangler deploy
+# Los secretos NO van aquí; se cargan con  npx wrangler secret put <NOMBRE>
+
+name = "structurai-bot"
+main = "src/worker.js"
+compatibility_date = "2024-11-01"
+
+# Variables NO secretas (visibles). Ajusta RAW_BASE y GITHUB_REPO tras crear tu repo.
+[vars]
+RAW_BASE = "https://raw.githubusercontent.com/TU_USUARIO/structurai/main"
+GITHUB_REPO = "TU_USUARIO/structurai"
+MODEL = "gemini-2.0-flash"
+
+# Secretos (cargar con `wrangler secret put`, NO escribir aquí):
+#   GEMINI_API_KEY          -> de Google AI Studio (aistudio.google.com)
+#   TELEGRAM_BOT_TOKEN       -> de @BotFather
+#   TELEGRAM_WEBHOOK_SECRET  -> una cadena aleatoria que tú inventes (p. ej. uuid)
+#   GITHUB_TOKEN             -> token fino con permiso Issues: Read & Write sobre el repo
