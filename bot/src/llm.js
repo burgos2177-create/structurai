@@ -13,6 +13,10 @@ export async function callLLM(systemPrompt, userText, env) {
       temperature: 0.3,
       maxOutputTokens: 2048,
       topP: 0.95,
+      // gemini-flash-latest es un modelo "thinking": razona internamente antes de responder.
+      // Lo desactivamos para que (a) ese razonamiento no se filtre (a veces en inglés) y
+      // (b) no se coma los tokens de salida dejando la respuesta a medias.
+      thinkingConfig: { thinkingBudget: 0 },
     },
   };
 
