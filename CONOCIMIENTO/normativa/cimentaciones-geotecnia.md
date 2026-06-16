@@ -152,9 +152,39 @@ Siempre: **instrumentación** (inclinómetros, testigos topográficos en vecinos
 
 ---
 
+## 8. Cimientos corridos de mampostería de piedra braza (criterio INIFED para escuelas)
+
+> Fuente: **INIFED/SEP — Normas y Especificaciones para Estudios, Proyectos, Construcción e Instalaciones, Infraestructura Educativa (Rev. 2014), §8.4 Cimientos.** Específico de edificación escolar, pero la lógica es general para cimientos corridos de mampostería en vivienda y muros de carga.
+
+**Escarpio (talud de las caras):** la pendiente de las caras inclinadas del cimiento de piedra braza, **medida desde la arista de la dala o muro, no será menor que 1.5 (vertical) : 1 (horizontal)** (≈ 56° desde la horizontal). Esto obliga al cimiento a trabajar **a compresión** (como un trapecio/arco invertido) y reparte la carga al suelo dentro del ángulo de distribución. *Refina el valor aproximado de "~60°": el normativo exacto de este documento es 1.5:1 (V:H).*
+
+**Tabla 8.1 — Separación máxima de cimientos perpendiculares donde NO se revisa la estabilidad a torsión:**
+Los cimientos **transversales (perpendiculares)** amarran al cimiento corrido y evitan que gire/torsione bajo la reacción del suelo. Si respetas esta separación máxima según la presión de contacto, **te ahorras el análisis de estabilidad a torsión**:
+
+| Presión de contacto con el terreno (kg/m²) | Claro máximo entre cimientos perpendiculares (m) |
+|---|---|
+| menos de 2000 | **10.0** |
+| 2000 a 2500 | **9.0** |
+| 2500 a 3000 | **7.5** |
+| 3000 a 4000 | **6.0** |
+| 4000 a 5000 | **4.5** |
+
+> **Regla:** a mayor presión de contacto, **más juntos** deben ir los cimientos transversales (más reacción y excentricidad → más tendencia a torsión → más amarres).
+> **Unidad:** kg/m² (NO kg/cm²). `2000 kg/m² = 2 t/m² = 0.20 kg/cm²`. Presión de contacto `q = (carga del muro por metro lineal) / (ancho del cimiento)`.
+
+**Otros requisitos del §8.4:**
+- **Dalas de concreto reforzado** en TODOS los cimientos (los sujetos a momento de volteo y los perpendiculares a ellos).
+- **Castillos empotrados ≥ 40 cm** dentro del cimiento.
+- Considerar la **pérdida de área** en los cruces de cimientos.
+
+**Cómo se usa (criterio de obra):** calcula la presión de contacto `q`, entra a la Tabla 8.1 y lee el claro máximo; si tus cimientos transversales (muros de cruje/divisorios) están más juntos que ese valor → no revisas torsión; si están más separados → agrega un cimiento transversal intermedio o haz el análisis de torsión. Siempre con EMS y firma del responsable.
+
+---
+
 ## Fuentes
 
 - NTC para Diseño y Construcción de Cimentaciones, RCDMX 2017 — texto oficial (PAOT): https://paot.org.mx/centro/normas_a/2022/1%20NORMAS%20TECNICAS%20COMPLEMENTARIAS%20PARA%20DISENO%20Y%20CONSTRUCCION%20DE%20CIMENTACIONES.pdf
+- INIFED/SEP — Normas y Especificaciones para Estudios, Proyectos, Construcción e Instalaciones, Infraestructura Educativa (Rev. 2014), Volumen 4 Tomo II / §8.4 Cimientos (Tabla 8.1, Figura 8.1). *Verificado contra el documento aportado por el usuario.*
 - NTC-Cimentaciones 2017 (IPN/ESIA): https://uteycv.esiaz.ipn.mx/comunidad/estructuras/comunicados/NTC%2006.nov.202_cimentaciones.pdf
 - Pilotes de control (IINGEN-UNAM): https://aplicaciones.iingen.unam.mx/ConsultasSPII/MediaDOI/SID-710.pdf
 - Los suelos lacustres de la Ciudad de México (Díaz-Rodríguez): https://www.scipedia.com/wd/images/2/26/Draft_Content_101349517Diaz-Rodriguez.pdf

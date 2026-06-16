@@ -23,7 +23,7 @@ const RULES = [
     files: [`${K}/normativa/ntc-criterios-cargas.md`] },
   { rx: /drift|distorsi[oó]n|espectro|factor q|sasid|prodisis|sismo|s[ií]smic|cfe|mdoc/i,
     files: [`${K}/normativa/ntc-sismo-cfe-mdoc.md`] },
-  { rx: /cimentaci[oó]n|zapata|pilote|pila|caj[oó]n|asentamiento|geotecn|losa de cimentaci[oó]n|excavaci[oó]n|lodo benton/i,
+  { rx: /cimentaci[oó]n|cimiento|zapata|pilote|pila|caj[oó]n|asentamiento|geotecn|excavaci[oó]n|lodo benton|piedra braza|escarpio|presi[oó]n de contacto/i,
     files: [`${K}/normativa/cimentaciones-geotecnia.md`] },
   { rx: /viento|succi[oó]n|c[uú]pula|cubierta ligera|anuncio|isotacas|v[oó]rtic|gobierna viento/i,
     files: [`${K}/normativa/viento-ntc-cfe-asce.md`] },

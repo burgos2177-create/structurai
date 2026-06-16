@@ -36,6 +36,21 @@ CFE, fabricantes mexicanos).
 
 <!-- Nuevas entradas debajo de esta línea, las más recientes arriba. -->
 
+## 2026-06-14 — Aprendizaje #1: Tabla 8.1 INIFED (cimientos de piedra braza)
+
+**Primer conocimiento incorporado tras desplegar el bot** (el ciclo de retroalimentación en acción).
+Detectado en uso real: un usuario aportó una lámina del documento INIFED que no estaba en el cerebro.
+
+- `cimentaciones-geotecnia.md` §8 (nuevo): ✅ escarpio ≥ **1.5(V):1(H)**; **Tabla 8.1** (presión de
+  contacto kg/m² → claro máximo entre cimientos perpendiculares para NO revisar torsión: <2000→10 m …
+  4000-5000→4.5 m); dalas en todos los cimientos; **castillos empotrados ≥40 cm**; pérdida de área en
+  cruces. Fuente: INIFED/SEP, Normas de Infraestructura Educativa Rev. 2014, §8.4. Verificado contra
+  la imagen del documento.
+- `bot/src/router.js`: enrutador amplía a "cimiento / piedra braza / escarpio / presión de contacto".
+- `bot/src/knowledge.js`: la caché ahora tiene **TTL de 5 min** → a partir de aquí, **un `git push`
+  se refleja en el bot sin necesidad de redeploy** (este cambio sí requirió redeploy por tocar código).
+
+
 ## 2026-06-14 — Oleada final v3.0 (cierre de temario)
 
 Tercera fase: cerrar el temario de una maestría de estructuras de élite (8 frentes en paralelo,

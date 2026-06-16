@@ -1,5 +1,6 @@
 // knowledge.js — Carga la identidad y el conocimiento desde el repo de GitHub (RAW_BASE).
-// Cachea en memoria del isolate para no re-descargar en cada petición.
+// Cachea en memoria del isolate con un TTL, para que tras un `git push` el bot tome la
+// nueva versión en pocos minutos SIN necesidad de redeploy.
 // RAW_BASE ejemplo: https://raw.githubusercontent.com/<usuario>/structurai/main
 
 const IDENTITY_FILES = [
@@ -9,36 +10,40 @@ const IDENTITY_FILES = [
   "IDENTITY/operating-principles.md",
 ];
 
-let identityCache = null;
-const knowledgeCache = new Map(); // ruta -> texto
+const TTL_MS = 5 * 60 * 1000; // 5 min: un git push se refleja en el bot en <= 5 min sin redeploy.
+
+let identityCache = { t: 0, v: null };
+const knowledgeCache = new Map(); // ruta -> { t, v }
 
 async function fetchRaw(path, env) {
   const base = (env.RAW_BASE || "").replace(/\/$/, "");
   const url = `${base}/${path}`;
-  const res = await fetch(url, { cf: { cacheTtl: 600, cacheEverything: true } });
+  // cacheTtl corto en el edge de Cloudflare para que las actualizaciones se propaguen rápido.
+  const res = await fetch(url, { cf: { cacheTtl: 120, cacheEverything: true } });
   if (!res.ok) throw new Error(`No se pudo leer ${path} (${res.status}) desde ${base}`);
   return await res.text();
 }
 
 export async function getIdentity(env) {
-  if (identityCache) return identityCache;
+  if (identityCache.v && Date.now() - identityCache.t < TTL_MS) return identityCache.v;
   const parts = await Promise.all(
     IDENTITY_FILES.map((f) =>
       fetchRaw(f, env).then((t) => `\n\n===== ${f} =====\n${t}`).catch(() => "")
     )
   );
-  identityCache = parts.join("");
-  return identityCache;
+  identityCache = { t: Date.now(), v: parts.join("") };
+  return identityCache.v;
 }
 
 export async function getKnowledge(paths, env) {
   const chunks = await Promise.all(
     paths.map(async (p) => {
-      if (knowledgeCache.has(p)) return { p, t: knowledgeCache.get(p) };
+      const c = knowledgeCache.get(p);
+      if (c && Date.now() - c.t < TTL_MS) return { p, t: c.v };
       try {
-        const t = await fetchRaw(p, env);
-        knowledgeCache.set(p, t);
-        return { p, t };
+        const v = await fetchRaw(p, env);
+        knowledgeCache.set(p, { t: Date.now(), v });
+        return { p, t: v };
       } catch (e) {
         return { p, t: `(No se pudo cargar ${p})` };
       }
@@ -49,8 +54,8 @@ export async function getKnowledge(paths, env) {
     .join("");
 }
 
-// Permite refrescar la caché si el conocimiento cambia (opcional, llamar desde un endpoint admin).
+// Refresco manual de la caché si se necesita (opcional).
 export function clearCache() {
-  identityCache = null;
+  identityCache = { t: 0, v: null };
   knowledgeCache.clear();
 }
