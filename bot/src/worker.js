@@ -105,10 +105,10 @@ function issueBody(question, ans, proposal, origin) {
 async function handleTelegram(update, env) {
   const token = env.TELEGRAM_BOT_TOKEN;
   try {
-    // Mensajes de texto
-    if (update.message && update.message.text) {
+    // Mensajes (texto y adjuntos)
+    if (update.message) {
       const msg = update.message;
-      const text = msg.text.trim();
+      const text = (msg.text || "").trim();
       if (text === "/start" || text === "/ayuda") {
         return sendText(token, msg.chat.id,
           "🏗️ Soy StructurAI, tu asistente de estructuras y procesos constructivos (México).\n\n" +
@@ -116,9 +116,26 @@ async function handleTelegram(update, env) {
           "En cada respuesta verás 👍 👎 ✍️ — úsalos para mejorarme (lo que marques entra como propuesta de aprendizaje en GitHub).\n\n" +
           "⚠️ Soy orientativo: no sustituyo el cálculo firmado por un ingeniero responsable.");
       }
-      await sendTyping(token, msg.chat.id);
-      const reply = await answer(text, env);
-      return sendAnswer(token, msg.chat.id, msg.message_id, reply);
+      // Adjuntos (PDF, imagen, audio…): aún no se pueden leer
+      const hasAttachment = !!(msg.document || msg.photo || msg.audio || msg.voice || msg.video || msg.sticker);
+      if (hasAttachment) {
+        const caption = (msg.caption || "").trim();
+        if (caption) {
+          await sendTyping(token, msg.chat.id);
+          const reply = await answer(caption, env);
+          return sendAnswer(token, msg.chat.id, msg.message_id,
+            "📎 (Por ahora no puedo leer archivos adjuntos; respondo a tu pregunta con mi base de conocimiento.)\n\n" + reply);
+        }
+        return sendText(token, msg.chat.id,
+          "📎 Por ahora no puedo leer archivos adjuntos (PDF, imágenes). Escríbeme tu pregunta como texto, o pega el fragmento que te interese, y con gusto te ayudo.");
+      }
+      // Texto normal
+      if (text) {
+        await sendTyping(token, msg.chat.id);
+        const reply = await answer(text, env);
+        return sendAnswer(token, msg.chat.id, msg.message_id, reply);
+      }
+      return; // sin contenido manejable
     }
 
     // Botones de feedback

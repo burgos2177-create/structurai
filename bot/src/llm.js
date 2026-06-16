@@ -10,8 +10,8 @@ export async function callLLM(systemPrompt, userText, env) {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: "user", parts: [{ text: userText }] }],
     generationConfig: {
-      temperature: 0.35,
-      maxOutputTokens: 1600,
+      temperature: 0.3,
+      maxOutputTokens: 2048,
       topP: 0.95,
     },
   };
