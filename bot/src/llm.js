@@ -2,8 +2,10 @@
 // Actualmente: Google Gemini (capa gratuita). Para cambiar a Claude u otro,
 // reemplaza SOLO la función callLLM() — el resto del bot no cambia.
 
-export async function callLLM(systemPrompt, userText, env) {
-  const model = env.MODEL || "gemini-2.0-flash";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+export async function callLLM(systemPrompt, userText, env, attempt = 0) {
+  const model = env.MODEL || "gemini-flash-latest";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${env.GEMINI_API_KEY}`;
 
   const body = {
@@ -26,9 +28,17 @@ export async function callLLM(systemPrompt, userText, env) {
     body: JSON.stringify(body),
   });
 
+  // Reintento ante saturación temporal de la capa gratuita (429) o servicio (503).
+  if ((res.status === 429 || res.status === 503) && attempt < 2) {
+    await sleep(2000 * (attempt + 1)); // 2s, luego 4s
+    return callLLM(systemPrompt, userText, env, attempt + 1);
+  }
+  if (res.status === 429) {
+    throw new Error("límite de la capa gratuita de Gemini alcanzado (varias preguntas muy seguidas); reintenta en ~1 min");
+  }
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
-    throw new Error(`Gemini ${res.status}: ${detail.slice(0, 300)}`);
+    throw new Error(`Gemini ${res.status}: ${detail.slice(0, 200)}`);
   }
 
   const data = await res.json();

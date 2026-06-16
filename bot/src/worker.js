@@ -27,6 +27,21 @@ async function answer(question, env) {
   return callLLM(system, user, env);
 }
 
+// Responde y SIEMPRE manda algo al usuario, aunque el modelo falle: nunca fallar en silencio.
+async function replyOrError(token, chatId, msgId, question, env, prefix = "") {
+  await sendTyping(token, chatId);
+  let reply;
+  try {
+    reply = await answer(question, env);
+  } catch (e) {
+    const detail = String(e && e.message ? e.message : e).slice(0, 160);
+    return sendText(token, chatId,
+      "⚠️ No pude responder en este momento. Casi siempre es el límite de la capa gratuita de Gemini cuando llegan varias preguntas muy seguidas — dame ~1 minuto y vuelve a intentar. 🙏\n\n" +
+      "(Detalle: " + detail + ")");
+  }
+  return sendAnswer(token, chatId, msgId, prefix + reply);
+}
+
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), {
     status,
@@ -121,19 +136,15 @@ async function handleTelegram(update, env) {
       if (hasAttachment) {
         const caption = (msg.caption || "").trim();
         if (caption) {
-          await sendTyping(token, msg.chat.id);
-          const reply = await answer(caption, env);
-          return sendAnswer(token, msg.chat.id, msg.message_id,
-            "📎 (Por ahora no puedo leer archivos adjuntos; respondo a tu pregunta con mi base de conocimiento.)\n\n" + reply);
+          return replyOrError(token, msg.chat.id, msg.message_id, caption, env,
+            "📎 (Por ahora no puedo leer archivos adjuntos; respondo a tu pregunta con mi base de conocimiento.)\n\n");
         }
         return sendText(token, msg.chat.id,
           "📎 Por ahora no puedo leer archivos adjuntos (PDF, imágenes). Escríbeme tu pregunta como texto, o pega el fragmento que te interese, y con gusto te ayudo.");
       }
       // Texto normal
       if (text) {
-        await sendTyping(token, msg.chat.id);
-        const reply = await answer(text, env);
-        return sendAnswer(token, msg.chat.id, msg.message_id, reply);
+        return replyOrError(token, msg.chat.id, msg.message_id, text, env);
       }
       return; // sin contenido manejable
     }
